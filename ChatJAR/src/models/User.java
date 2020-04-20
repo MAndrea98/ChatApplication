@@ -41,6 +41,12 @@ public class User {
 	public void setHost(Host host) {
 		this.host = host;
 	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", password=" + password + ", host=" + host + "]";
+	}
+	
 	
 	
 

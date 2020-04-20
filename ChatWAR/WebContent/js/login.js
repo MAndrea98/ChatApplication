@@ -22,3 +22,38 @@ $(document).ready(function(){
 	    }
     });
 });
+
+function login() {
+	let username = $('#username').val();
+	let password = $('#password').val();
+	$.ajax({
+		url: "rest/chat/login/" + username + "/" + password,
+		type: "POST",
+		contentType: "application/json",
+		success: function(data) {
+			if (data === undefined) 
+				alert('error');
+			else 
+				alert('super');
+		}
+	});
+}
+
+
+function register() {
+	let username = $('#new_username').val();
+	let password = $('#new_password').val();
+	let confirm = $('#new_confirm').val();
+	$.ajax({
+		url: "rest/chat/register/" + username + "/" + password + "/" + confirm,
+		type: "POST",
+		contentType: "application/json",
+		success: function(data) {
+			if (data === undefined)
+				alert('error');
+			else 
+				alert('super');
+		}
+	});
+}
+
