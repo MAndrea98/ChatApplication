@@ -1,7 +1,10 @@
 package models;
 
+import java.util.UUID;
+
 public class User {
 	
+	private UUID id;
 	private String username;
 	private String password;
 	private Host host;
@@ -9,13 +12,23 @@ public class User {
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
+		this.id = UUID.randomUUID();
 	}
 
 	public User(String username, String password, Host host) {
 		super();
+		this.id = UUID.randomUUID();
 		this.username = username;
 		this.password = password;
 		this.host = host;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

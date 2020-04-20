@@ -34,8 +34,10 @@ function login() {
 		success: function(data) {
 			if (data === undefined) 
 				alert('error');
-			else 
-				alert('super');
+			else {
+				localStorage.setItem('profile', data.username);
+				window.location = './profile.html';
+			}
 		}
 	});
 }

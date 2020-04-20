@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,28 +16,14 @@ import javax.ws.rs.core.MediaType;
 
 import models.User;
 
+
 @Stateless
 @Path("/chat")
 @LocalBean
 public class ChatBean implements ChatRemote{
-	
+
 	private List<User> users = new ArrayList<User>();
 	private List<User> loggedIn = new ArrayList<User>();
-	
-	@GET
-	@Path("/test")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String test() {
-		return "OK";
-	}
-	
-	@POST
-	@Path("/post/{text}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String post(@PathParam("text") String text) {
-		System.out.println("Received message: " + text);
-		return "OK";
-	}
 
 	@POST
 	@Path("/login")
@@ -44,7 +31,6 @@ public class ChatBean implements ChatRemote{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public User login(User u) {
-		// TODO Auto-generated method stub
 		for (User user : users) {
 			if (user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())) {
 				loggedIn.add(user);
@@ -60,7 +46,6 @@ public class ChatBean implements ChatRemote{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public User register(User u, @PathParam("confirm") String confirm) {
-		// TODO Auto-generated method stub
 		if (!u.getPassword().equals(confirm)) {
 			return null;
 		}
@@ -75,6 +60,36 @@ public class ChatBean implements ChatRemote{
 		user.setPassword(u.getPassword());
 		users.add(user);
 		return user;
+	}
+
+	@DELETE
+	@Path("/loggedIn/{username}")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Override
+	public void logout(@PathParam("username") String username) {
+		for (User user : users) {
+			if (user.getUsername().equals(username)) {
+				loggedIn.remove(user);
+			}
+		}
+	}
+
+	@GET
+	@Path("/registered")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<User> registered() {
+		return users;
+	}
+
+	@GET
+	@Path("/loggedIn")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<User> loggedIn() {
+		return loggedIn;
 	}
 	
 	
