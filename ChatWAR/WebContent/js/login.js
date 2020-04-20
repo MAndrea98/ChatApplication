@@ -27,8 +27,9 @@ function login() {
 	let username = $('#username').val();
 	let password = $('#password').val();
 	$.ajax({
-		url: "rest/chat/login/" + username + "/" + password,
+		url: "rest/chat/login",
 		type: "POST",
+		data: JSON.stringify({username, password}),
 		contentType: "application/json",
 		success: function(data) {
 			if (data === undefined) 
@@ -45,8 +46,9 @@ function register() {
 	let password = $('#new_password').val();
 	let confirm = $('#new_confirm').val();
 	$.ajax({
-		url: "rest/chat/register/" + username + "/" + password + "/" + confirm,
+		url: "rest/chat/register/" + confirm,
 		type: "POST",
+		data: JSON.stringify({username, password}),
 		contentType: "application/json",
 		success: function(data) {
 			if (data === undefined)

@@ -39,14 +39,14 @@ public class ChatBean implements ChatRemote{
 	}
 
 	@POST
-	@Path("/login/{username}/{password}")
+	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public User login(@PathParam("username") String username, @PathParam("password") String password) {
+	public User login(User u) {
 		// TODO Auto-generated method stub
 		for (User user : users) {
-			if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+			if (user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())) {
 				loggedIn.add(user);
 				return user;
 			}
@@ -56,25 +56,25 @@ public class ChatBean implements ChatRemote{
 	}
 	
 	@POST
-	@Path("/register/{username}/{password}/{confirm}")
+	@Path("/register/{confirm}")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public String register(@PathParam("username") String username, @PathParam("password") String password, @PathParam("confirm") String confirm) {
+	public User register(User u, @PathParam("confirm") String confirm) {
 		// TODO Auto-generated method stub
-		if (!password.equals(confirm)) {
+		if (!u.getPassword().equals(confirm)) {
 			return null;
 		}
 		
-		for (User u : users) {
-			if (u.getUsername().equals(username)) {
+		for (User user : users) {
+			if (user.getUsername().equals(u.getUsername())) {
 				return null;
 			}
 		}
 		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
+		user.setUsername(u.getUsername());
+		user.setPassword(u.getPassword());
 		users.add(user);
-		return username;
+		return user;
 	}
 	
 	

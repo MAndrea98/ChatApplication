@@ -4,7 +4,7 @@ import models.User;
 
 public interface ChatRemote {
 
-	public User login(String username, String password);
+	public User login(User u);
 	
-	public String register(String username, String password, String confirm);
+	public User register(User u, String confirm);
 }
