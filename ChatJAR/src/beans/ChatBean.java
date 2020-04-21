@@ -1,10 +1,11 @@
 package beans;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,8 +13,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import dao.UserDAO;
 import models.User;
 
 
@@ -22,8 +25,15 @@ import models.User;
 @LocalBean
 public class ChatBean implements ChatRemote{
 
-	private List<User> users = new ArrayList<User>();
-	private List<User> loggedIn = new ArrayList<User>();
+	@Context
+	ServletContext ctx;
+	
+	@PostConstruct
+	public void init() {
+		if(ctx.getAttribute("userDAO")==null) {
+			ctx.setAttribute("userDAO", new UserDAO());
+		}
+	}
 
 	@POST
 	@Path("/login")
@@ -31,9 +41,10 @@ public class ChatBean implements ChatRemote{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public User login(User u) {
-		for (User user : users) {
+		UserDAO users = (UserDAO) ctx.getAttribute("userDAO");
+		for (User user : users.getAllUsers()) {
 			if (user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())) {
-				loggedIn.add(user);
+				users.getLoggedUsers().add(user);
 				return user;
 			}
 		}
@@ -46,11 +57,12 @@ public class ChatBean implements ChatRemote{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public User register(User u, @PathParam("confirm") String confirm) {
+		UserDAO users = (UserDAO) ctx.getAttribute("userDAO");
 		if (!u.getPassword().equals(confirm)) {
 			return null;
 		}
 		
-		for (User user : users) {
+		for (User user : users.getAllUsers()) {
 			if (user.getUsername().equals(u.getUsername())) {
 				return null;
 			}
@@ -58,7 +70,8 @@ public class ChatBean implements ChatRemote{
 		User user = new User();
 		user.setUsername(u.getUsername());
 		user.setPassword(u.getPassword());
-		users.add(user);
+		users.getAllUsers().add(user);
+		System.out.println("#######" + users.getAllUsers().size());
 		return user;
 	}
 
@@ -67,9 +80,10 @@ public class ChatBean implements ChatRemote{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public void logout(@PathParam("username") String username) {
-		for (User user : users) {
+		UserDAO users = (UserDAO) ctx.getAttribute("userDAO");
+		for (User user : users.getAllUsers()) {
 			if (user.getUsername().equals(username)) {
-				loggedIn.remove(user);
+				users.getLoggedUsers().remove(user);
 			}
 		}
 	}
@@ -80,7 +94,8 @@ public class ChatBean implements ChatRemote{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public List<User> registered() {
-		return users;
+		UserDAO users = (UserDAO) ctx.getAttribute("userDAO");
+		return users.getAllUsers();
 	}
 
 	@GET
@@ -89,7 +104,8 @@ public class ChatBean implements ChatRemote{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public List<User> loggedIn() {
-		return loggedIn;
+		UserDAO users = (UserDAO) ctx.getAttribute("userDAO");
+		return users.getLoggedUsers();
 	}
 	
 	

@@ -31,11 +31,11 @@ function login() {
 		type: "POST",
 		data: JSON.stringify({username, password}),
 		contentType: "application/json",
-		success: function(data) {
-			if (data === undefined) 
+		success: function(user) {
+			if (user === undefined) 
 				alert('error');
 			else {
-				localStorage.setItem('profile', data.username);
+				localStorage.setItem('user', JSON.stringify(user));
 				window.location = './profile.html';
 			}
 		}

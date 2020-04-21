@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!--  This file has been downloaded from https://bootdey.com  -->
     <!--  All snippets are MIT license https://bootdey.com/license -->
-    <title>Bootdey.com</title>
+    <title>Chat application</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
@@ -161,6 +161,10 @@
 			width: 48px!important;
 			height: 48px!important;
 		}
+		hr.new1 {
+			border: 6px solid green;
+			border-radius: 5px;
+		}
     </style>
 </head>
 <body>
@@ -176,7 +180,7 @@
                             <img data-no-retina="" class="img-circle img-responsive img-bordered-primary" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="John Doe">
                         </li>
                         <li class="text-center">
-                            <h4 class="text-capitalize" id="profile_username"></h4>
+                            <h4 id="profile_username"></h4>
                         </li>
                         
                         <li><br></li>
@@ -202,7 +206,9 @@
 
     </div>
     <div class="col-lg-9 col-md-9 col-sm-8">
-
+	<!--
+	<button onclick="return proba();"/>
+	-->
     <div class="profile-cover">
         <div class="cover rounded shadow no-overflow">
             <div class="inner-cover">
@@ -213,13 +219,10 @@
                     </button>
                     <ul class="dropdown-menu pull-right no-border" role="menu">
                         <li class="active"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
-                        <li><a href="#"><i class="fa fa-fw fa-user"></i> <span>About</span></a></li>
-                        <li><a href="#"><i class="fa fa-fw fa-photo"></i> <span>Photos</span> <small>(98)</small></a></li>
-                        <li><a href="#"><i class="fa fa-fw fa-users"></i><span> Friends </span><small>(23)</small></a></li>
-                        <li><a href="#"><i class="fa fa-fw fa-envelope"></i> <span>Messages</span> <small>(7 new)</small></a></li>
+                        
                     </ul>
                 </div>
-                <img  src="https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg" class="img-responsive full-width" alt="cover" style="max-height:200px;">
+                <img  src="img/04.jpg"class="img-responsive full-width" alt="cover" style="max-height:200px;">
             </div>
             <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu">
                 
@@ -230,46 +233,21 @@
     <div class="divider"></div>
     <div class="panel rounded shadow">
         <form action="...">
-            <textarea class="form-control input-lg no-border" rows="2" placeholder="What are you doing?..."></textarea>
+            <textarea class="form-control input-lg no-border" rows="2" placeholder="What are you doing?..." id="message_to_all_text"></textarea>
         </form>
         <div class="panel-footer">
-            <button class="btn btn-success pull-right mt-5">POST</button>
+            <button class="btn btn-success pull-right mt-5" onclick="return sendMessage();">POST</button>
             <ul class="nav nav-pills">
-                
+                <select class="selectpicker" id="select">
+				  <option>All users</option>
+				</select>
             </ul><!-- /.nav nav-pills -->
         </div><!-- /.panel-footer -->
     </div><!-- /.panel -->
     <div class="row">
         
         <div class="col-md-12">
-            <div class="panel panel-success rounded shadow">
-                <div class="panel-heading no-border">
-                    <div class="pull-left half">
-                        <div class="media">
-                            <div class="media-object pull-left">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="..." class="img-circle img-post">
-                            </div>
-                            <div class="media-body">
-                                <a href="#" class="media-heading block mb-0 h4 text-white">John Doe</a>
-                                <span class="text-white h6">on 8th June, 2014</span>
-                            </div>
-                        </div>
-                    </div><!-- /.pull-left -->
-                    <div class="pull-right">
-                        <a href="#" class="text-white h4"><i class="fa fa-heart"></i> 15.5K</a>
-                    </div><!-- /.pull-right -->
-                    <div class="clearfix"></div>
-                </div><!-- /.panel-heading -->
-                <div class="panel-body no-padding">
-                    <div class="inner-all block">
-                        <h4>Upload on my album :D</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, iste omnis fugiat porro consequuntur ratione iure error reprehenderit cum est ab similique magnam molestias aperiam voluptatibus quia aliquid! Sed, minima.
-                        </p>
-                        
-                    </div><!-- /.inner-all -->
-                    
-                </div><!-- /.panel-body -->
+            <div class="panel panel-success rounded shadow" id="messages_timeline">
                 
             </div><!-- /.panel -->
         </div>

@@ -13,6 +13,7 @@ public class User {
 		super();
 		// TODO Auto-generated constructor stub
 		this.id = UUID.randomUUID();
+		this.host = new Host();
 	}
 
 	public User(String username, String password, Host host) {

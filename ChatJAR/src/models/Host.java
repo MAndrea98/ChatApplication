@@ -8,6 +8,8 @@ public class Host {
 	public Host() {
 		super();
 		// TODO Auto-generated constructor stub
+		this.alias = "";
+		this.address = "";
 	}
 
 	public Host(String alias, String address) {
