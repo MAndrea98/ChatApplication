@@ -17,20 +17,31 @@ function logout() {
 	});
 }
 
-function addUser(username, j, active) {
+function addActiveUsers(username, j) {
 	let user = $('<div class="media">' +
                     '<div class="media-left media-middle">' +
                         '<a href="#"><img class="media-object img-circle img-thumbnail thumb48" src="https://bootdey.com/img/Content/avatar/avatar'+j+'.png" alt="Contact"></a>'+
                     '</div>'+
                     '<div class="media-body pt-sm">'+
                         '<div class="text-bold">@'+ username +
-                            '<div class="text-sm text-muted">'+active+'</div>'+
+                            '<div class="text-sm text-muted">Active now</div>'+
                         '</div>'+
                    '</div>'+
                 '</div>');
 	$('#users_panel').append(user);
+	
+}
+
+function addUsers(username) {
 	let option = $('<option>@'+username+'</option>');
 	$('#select').append(option);
+} 
+
+function removeOptions(selectElement) {
+    let i, L = selectElement.options.length - 1;
+    for(i = L; i >= 0; i--) {
+       selectElement.remove(i);
+    }
 }
 
 function allUsers() {
@@ -38,32 +49,32 @@ function allUsers() {
 		url: "rest/chat/registered",
 		type: "GET",
 		success: function(users) {
-			$.ajax({
-				url: "rest/chat/loggedIn",
-				type: "GET",
-				success: function(loggedIn) {
-					let element = document.getElementById("users_panel");
-					while (element.firstChild) {
-						element.removeChild(element.firstChild);
-					}
-					for (let i = 0; i < users.length; i++) {
-						for (let j = 0; j < loggedIn.length; j++) {
-							let k = i % 8 + 1;
-							if (loggedIn[j].username == users[i].username) {
-								addUser(users[i].username, k, "Active now");
-								continue;
-							}
-							else {
-								addUser(users[i].username, k, "Offline");
-							}
-						}
-						
-					}
-				}
-			});
+			removeOptions(document.getElementById('select'));
+			let option = $('<option>All users</option>');
+			$('#select').append(option);
+			for (let i = 0; i < users.length; i++) {
+				let k = i % 8 + 1;
+				addUsers(users[i].username);
+			}
 		},
-		error: function() {
-			alert('Desila se greska');
+		error : function () {
+			alert('Error');
+		}
+	});
+	
+	$.ajax({
+		url: "rest/chat/loggedIn",
+		type: "GET",
+		success: function(loggedIn) {
+			let element = document.getElementById("users_panel");
+			while (element.firstChild) {
+				element.removeChild(element.firstChild);
+			}
+			for (let i = 0; i < loggedIn.length; i++) {
+				let k = i % 8 + 1;
+				addActiveUsers(loggedIn[i].username, k);
+				
+			}
 		}
 	});
 }

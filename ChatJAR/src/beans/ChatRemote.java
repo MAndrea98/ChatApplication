@@ -2,8 +2,11 @@ package beans;
 
 import java.util.List;
 
+import javax.ejb.Remote;
+
 import models.User;
 
+@Remote
 public interface ChatRemote {
 
 	public User login(User u);

@@ -18,26 +18,28 @@ import javax.ws.rs.core.MediaType;
 
 import dao.MessageDAO;
 import dao.UserDAO;
+import models.Host;
 import models.Message;
 import models.User;
 
 @Stateless
 @Path("/messages")
 @LocalBean
-public class ChatMessageBean implements ChatMessageRemote{
+public class ChatMessageBean implements ChatMessageRemote {
 	
-	@Context
-	ServletContext ctx;
+	private MessageDAO messageDAO;
+	private UserDAO userDAO;
 	
 	@PostConstruct
 	public void init() {
-		if(ctx.getAttribute("messageDAO")==null) {
-			ctx.setAttribute("messageDAO", new MessageDAO());
+		if (userDAO == null) {
+			userDAO = new UserDAO();
 		}
-		if(ctx.getAttribute("userDAO")==null) {
-			ctx.setAttribute("userDAO", new UserDAO());
+		if (messageDAO == null) {
+			messageDAO = new MessageDAO();
 		}
 	}
+	
 	
 	@GET
 	@Path("/test")
@@ -49,24 +51,27 @@ public class ChatMessageBean implements ChatMessageRemote{
 	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Override
 	public void sendToAll(Message m) {
-		MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
+		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
 		Message message = new Message();
 		message.setSender(m.getSender());
 		message.setText(m.getText());
-		message.setReciever(null);
+		message.setReciever(new User("null", "null", new Host()));
 		message.setSubject(message.getSender().getUsername() + " to all");
 		message.setDate(Calendar.getInstance());
 		messageDAO.getAllMessages().add(message);
+		//ctx.setAttribute("messageDAO", messageDAO);
 	}
 	
 	@POST
 	@Path("/{receiver}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Override
 	public void sendToUser(Message m, @PathParam("receiver") String username) {
-		MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
-		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
+		//UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 		User receiver = userDAO.findByUsername(username);
 		Message message = new Message();
 		message.setSender(m.getSender());
@@ -75,14 +80,16 @@ public class ChatMessageBean implements ChatMessageRemote{
 		message.setSubject("@" +message.getSender().getUsername() + " to @" + message.getReciever().getUsername());
 		message.setDate(Calendar.getInstance());
 		messageDAO.getAllMessages().add(message);
+		//ctx.setAttribute("messageDAO", messageDAO);
 	}
 	
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Override
 	public List<Message> allMessageOfUser(@PathParam("username") String username) {
-		MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
+		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
 		List<Message> messages = messageDAO.findByUser(username);
 		return messages;
 	}

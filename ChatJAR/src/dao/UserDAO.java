@@ -3,8 +3,11 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Singleton;
+
 import models.User;
 
+@Singleton
 public class UserDAO {
 
 	private List<User> allUsers = new ArrayList<User>();

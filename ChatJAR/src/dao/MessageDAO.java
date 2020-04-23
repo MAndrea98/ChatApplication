@@ -3,8 +3,11 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Singleton;
+
 import models.Message;
 
+@Singleton
 public class MessageDAO {
 
 	private List<Message> allMessages = new ArrayList<Message>();
@@ -28,7 +31,7 @@ public class MessageDAO {
 		for (Message m : allMessages) {
 			if (m.getSender().getUsername().equals(username) || 
 					m.getReciever().getUsername().equals(username) ||
-					m.getReciever() == null) {
+					m.getReciever().getUsername() == "null") {
 				messages.add(m);
 			}
 		}
