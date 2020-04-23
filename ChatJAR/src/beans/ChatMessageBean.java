@@ -6,14 +6,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import dao.MessageDAO;
@@ -53,7 +51,6 @@ public class ChatMessageBean implements ChatMessageRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void sendToAll(Message m) {
-		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
 		Message message = new Message();
 		message.setSender(m.getSender());
 		message.setText(m.getText());
@@ -61,7 +58,6 @@ public class ChatMessageBean implements ChatMessageRemote {
 		message.setSubject(message.getSender().getUsername() + " to all");
 		message.setDate(Calendar.getInstance());
 		messageDAO.getAllMessages().add(message);
-		//ctx.setAttribute("messageDAO", messageDAO);
 	}
 	
 	@POST
@@ -70,8 +66,6 @@ public class ChatMessageBean implements ChatMessageRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void sendToUser(Message m, @PathParam("receiver") String username) {
-		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
-		//UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 		User receiver = userDAO.findByUsername(username);
 		Message message = new Message();
 		message.setSender(m.getSender());
@@ -80,7 +74,6 @@ public class ChatMessageBean implements ChatMessageRemote {
 		message.setSubject("@" +message.getSender().getUsername() + " to @" + message.getReciever().getUsername());
 		message.setDate(Calendar.getInstance());
 		messageDAO.getAllMessages().add(message);
-		//ctx.setAttribute("messageDAO", messageDAO);
 	}
 	
 	@GET
@@ -89,7 +82,6 @@ public class ChatMessageBean implements ChatMessageRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public List<Message> allMessageOfUser(@PathParam("username") String username) {
-		//MessageDAO messageDAO = (MessageDAO) ctx.getAttribute("messageDAO");
 		List<Message> messages = messageDAO.findByUser(username);
 		return messages;
 	}
