@@ -124,7 +124,7 @@ function sendMessage() {
 						allMessages();
 					},
 					error: function() {
-						alert('Greska');
+						alert('Error');
 					}
 				});
 			}
@@ -140,13 +140,13 @@ function sendMessage() {
 						allMessages();
 					},
 					error: function() {
-						alert('Greska');
+						alert('Error');
 					}
 				});
 			}
 		},
 		error: function() {
-			
+			alert('Error');
 		}
 	});
 	
@@ -203,7 +203,7 @@ function allMessages() {
 			}	
 		},
 		error: function() {
-			alert('Greska');
+			alert('Error');
 		}
 	});
 }

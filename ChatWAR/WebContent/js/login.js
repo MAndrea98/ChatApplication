@@ -33,7 +33,7 @@ function login() {
 		contentType: "application/json",
 		success: function(user) {
 			if (user === undefined) 
-				alert('error');
+				alert('Error');
 			else {
 				localStorage.setItem('user', JSON.stringify(user));
 				window.location = './profile.html';
@@ -54,9 +54,9 @@ function register() {
 		contentType: "application/json",
 		success: function(data) {
 			if (data === undefined)
-				alert('error');
+				alert('Error');
 			else 
-				alert('super');
+				alert('Successfully registered!!!');
 		}
 	});
 }
