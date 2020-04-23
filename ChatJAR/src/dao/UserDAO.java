@@ -1,42 +1,41 @@
 package dao;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.ejb.Singleton;
 
 import models.User;
 
-@Singleton
 public class UserDAO {
 
-	private List<User> allUsers = new ArrayList<User>();
-	private List<User> loggedUsers = new ArrayList<User>();
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private ArrayList<User> loggedUsers = new ArrayList<User>();
 	
 	public UserDAO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<User> getAllUsers() {
+	public ArrayList<User> getAllUsers() {
 		return allUsers;
 	}
 
-	public void setAllUsers(List<User> allUsers) {
+	public void setAllUsers(ArrayList<User> allUsers) {
 		this.allUsers = allUsers;
 	}
 
-	public List<User> getLoggedUsers() {
+	public ArrayList<User> getLoggedUsers() {
 		return loggedUsers;
 	}
 
-	public void setLoggedUsers(List<User> loggedUsers) {
+	public void setLoggedUsers(ArrayList<User> loggedUsers) {
 		this.loggedUsers = loggedUsers;
 	}
 	
 	public User findByUsername(String username) {
+		System.out.println("###uso" + allUsers.size());
 		for (User u : allUsers) {
+			System.out.println("###for" + u.getUsername() + "#" + username);
 			if (u.getUsername().equals(username)) {
+				System.out.println("###naso");
 				return u;
 			}
 		}

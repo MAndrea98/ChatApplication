@@ -7,7 +7,7 @@ import javax.ejb.Singleton;
 
 import models.Message;
 
-@Singleton
+
 public class MessageDAO {
 
 	private List<Message> allMessages = new ArrayList<Message>();
@@ -26,12 +26,13 @@ public class MessageDAO {
 	}
 	
 	
-	public List<Message> findByUser(String username) {
-		List<Message> messages = new ArrayList<Message>();
+	public ArrayList<Message> findByUser(String username) {
+		System.out.println("####" + username);
+		ArrayList<Message> messages = new ArrayList<Message>();
 		for (Message m : allMessages) {
 			if (m.getSender().getUsername().equals(username) || 
-					m.getReciever().getUsername().equals(username) ||
-					m.getReciever().getUsername() == "null") {
+				m.getReciever().getUsername().equals(username) ||
+				m.getReciever().getUsername() == "null") {
 				messages.add(m);
 			}
 		}

@@ -63,6 +63,13 @@ public class Message {
 	public void setText(String text) {
 		this.text = text;
 	}
+
+	@Override
+	public String toString() {
+		return "Message [sender=" + sender + ", reciever=" + reciever + ", date=" + date + ", subject=" + subject
+				+ ", text=" + text + "]";
+	}
+	
 	
 	
 }

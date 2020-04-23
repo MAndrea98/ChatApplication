@@ -27,22 +27,14 @@ public class WSEndPoint {
 	}
 	
 	@OnMessage
-	public void echoTextMessage(Session session, String msg, boolean last) {
+	public void echoTextMessage(String msg) {
 		try {
-			if (session.isOpen()) {
-				for (Session s : sessions) {
-					if (!s.getId().equals(session.getId())) {
-						s.getBasicRemote().sendText(msg, last);
-					}
-				}
+	        for (Session s : sessions) {
+	        	System.out.println("WSEndPoint: " + msg);
+        		s.getBasicRemote().sendText(msg);
 			}
 		} catch (IOException e) {
-			try {
-				session.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 	}
 	

@@ -1,17 +1,42 @@
+var socket;
+var host = "ws://localhost:8080/ChatWAR/ws";
 $(document).ready(function() {
 	let user = JSON.parse(localStorage.getItem('user'));
 	document.getElementById("profile_username").innerHTML = "@" + user.username;
 	allUsers();
 	allMessages();
+	
+	try {
+		socket = new WebSocket(host);
+		console.log('conect: Socket Status: ' + socket.readyState);
+		
+		socket.onopen = function() {
+			console.log('onopen: Socket Status: ' + socket.readyState + ' (open)');
+		}
+		
+		socket.onmessage = function(msg) {
+			console.log('onmessage: Received: ' + msg.data);
+			allUsers();
+			allMessages();
+		}
+		
+		socket.onclose = function() {
+			socket = null; 
+		}
+		
+	} catch(exception) {
+		console.log('Error' + exception);
+	}
 });
 
 function logout() {
-	let data = localStorage.getItem('profile');
+	let logouter = document.getElementById("profile_username").innerHTML;
+	logouter = logouter.substring(1);
 	$.ajax({
-		url: "rest/chat/loggedIn/" + data,
+		url: "rest/chat/loggedIn/" + logouter,
 		type: "DELETE",
 		success: function() {
-			localStorage.clear();
+			localStorage.removeItem('user');
 			window.location = './login.html';	
 		}
 	});
@@ -81,39 +106,50 @@ function allUsers() {
 
 function sendMessage() {
 	let text = $('#message_to_all_text').val();
-	let sender = JSON.parse(localStorage.getItem('user'));
-	let receiver = $('#select').val();
-	if(receiver == "All users") {
-		$.ajax({
-			url: "rest/messages/all",
-			type: "POST",
-			data: JSON.stringify({text, sender}),
-			contentType: "application/json",
-			success: function() {
-				alert('Sent');
-				allMessages();
-			},
-			error: function() {
-				alert('Greska');
+	let username = document.getElementById("profile_username").innerHTML;
+	username = username.substring(1);
+	$.ajax({
+		url: "rest/chat/get_user/" + username,
+		type: "GET",
+		success: function(sender) {
+			let receiver = $('#select').val();
+			if(receiver == "All users") {
+				$.ajax({
+					url: "rest/messages/all",
+					type: "POST",
+					data: JSON.stringify({text, sender}),
+					contentType: "application/json",
+					success: function() {
+						alert('Sent');
+						allMessages();
+					},
+					error: function() {
+						alert('Greska');
+					}
+				});
 			}
-		});
-	}
-	else {
-		receiver = receiver.substring(1);
-		$.ajax({
-			url: "rest/messages/" + receiver,
-			type: "POST",
-			data: JSON.stringify({text, sender}),
-			contentType: "application/json",
-			success: function() {
-				alert('Sent');
-				allMessages();
-			},
-			error: function() {
-				alert('Greska');
+			else {
+				receiver = receiver.substring(1);
+				$.ajax({
+					url: "rest/messages/" + receiver,
+					type: "POST",
+					data: JSON.stringify({text, sender}),
+					contentType: "application/json",
+					success: function() {
+						alert('Sent');
+						allMessages();
+					},
+					error: function() {
+						alert('Greska');
+					}
+				});
 			}
-		});
-	}
+		},
+		error: function() {
+			
+		}
+	});
+	
 	
 }
 
@@ -152,9 +188,10 @@ function showAll(message) {
 }
 
 function allMessages() {
-	let user = JSON.parse(localStorage.getItem('user'));
+	let username = document.getElementById("profile_username").innerHTML;
+	username = username.substring(1);
 	$.ajax({
-		url: "rest/messages/" + user.username,
+		url: "rest/messages/" + username,
 		type: "GET",
 		success: function(messages) {
 			let element = document.getElementById("messages_timeline");
