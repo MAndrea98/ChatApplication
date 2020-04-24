@@ -3,8 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Singleton;
-
 import models.Message;
 
 
@@ -27,7 +25,6 @@ public class MessageDAO {
 	
 	
 	public ArrayList<Message> findByUser(String username) {
-		System.out.println("####" + username);
 		ArrayList<Message> messages = new ArrayList<Message>();
 		for (Message m : allMessages) {
 			if (m.getSender().getUsername().equals(username) || 

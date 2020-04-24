@@ -31,9 +31,7 @@ public class UserDAO {
 	}
 	
 	public User findByUsername(String username) {
-		System.out.println("###uso" + allUsers.size());
 		for (User u : allUsers) {
-			System.out.println("###for" + u.getUsername() + "#" + username);
 			if (u.getUsername().equals(username)) {
 				System.out.println("###naso");
 				return u;

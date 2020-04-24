@@ -96,7 +96,6 @@ public class ChatBean implements ChatRemote, ChatLocal {
 		user.setUsername(u.getUsername());
 		user.setPassword(u.getPassword());
 		userDAO.getAllUsers().add(user);
-		System.out.println("#####" + userDAO.getAllUsers().size());
 		ctx.setAttribute("userDAO", userDAO);
 		return user;
 	}
@@ -106,7 +105,6 @@ public class ChatBean implements ChatRemote, ChatLocal {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public void logout(@PathParam("username") String username) {
-		System.out.println("#####username: " + username);
 		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 		for(int i = 0; i < userDAO.getLoggedUsers().size(); i++) {
 			System.out.println(username + "###" + userDAO.getLoggedUsers().get(i).getUsername());
@@ -127,7 +125,6 @@ public class ChatBean implements ChatRemote, ChatLocal {
 		}
 		System.out.println(userDAO.getLoggedUsers().size() + " " + userDAO.getAllUsers().size());
 		ctx.setAttribute("userDAO", userDAO);
-		System.out.println("###logout");
 	}
 
 	@GET
