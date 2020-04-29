@@ -1,5 +1,7 @@
 package beans;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +25,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import dao.NodeDAO;
+import dao.UserDAO;
 import models.Host;
 
 @Startup
@@ -47,8 +50,19 @@ public class NodeBean implements NodeRemote, NodeLocal {
 		
 		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
 		if (nodeDAO.getAllHosts().size() == 0) {
-			Host host = new Host("master", "master");
-			nodeDAO.getAllHosts().add(host);
+			InetAddress ip;
+	        String hostname;
+	        try {
+	            ip = InetAddress.getLocalHost();
+	            hostname = ip.getHostName();
+	            System.out.println("Your current IP address : " + ip.getHostAddress());
+	            System.out.println("Your current Hostname : " + hostname);
+	            Host host = new Host("master", ip.getHostAddress());
+	            nodeDAO.getAllHosts().add(host);
+	        } catch (UnknownHostException e) {
+	            e.printStackTrace();
+	        }
+			
 			ctx.setAttribute("nodeDAO", nodeDAO);
 		}
 		try {
@@ -69,9 +83,10 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	@POST
 	@Path("/register")
 	@Override
-	public Host register(Host host) {
-		// TODO Auto-generated method stub
-		return null;
+	public void register(Host host) {
+		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
+		nodeDAO.getAllHosts().add(host);
+		ctx.setAttribute("nodeDAO", nodeDAO);
 	}
 
 	@POST
@@ -85,25 +100,28 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	@POST
 	@Path("/nodes")
 	@Override
-	public ArrayList<Host> allHost() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Host> allHost(Host newHost) {
+		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
+		return nodeDAO.getAllExceptNew(newHost);
 	}
 
 	@DELETE
 	@Path("/node/{alias}")
 	@Override
 	public void deleteNode(@PathParam("alias") String alias) {
-		// TODO Auto-generated method stub
-		
+		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
+		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+		nodeDAO.deleteByAlias(alias, userDAO);
+		ctx.setAttribute("nodeDAO", nodeDAO);
 	}
 
 	@GET
 	@Path("/node")
 	@Override
 	public void checkNode(Host host) {
-		// TODO Auto-generated method stub
-		
+		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
+		if(!nodeDAO.checkNode(host))
+			deleteNode(host.getAlias());
 	}
 
 }

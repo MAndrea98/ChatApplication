@@ -9,11 +9,11 @@ import models.Host;
 @Remote
 public interface NodeRemote {
 
-	public Host register(Host host);
+	public void register(Host host);
 	
 	public void newNode(Host host);
 	
-	public ArrayList<Host> allHost();
+	public ArrayList<Host> allHost(Host host);
 	
 	public void deleteNode(String alias);
 	

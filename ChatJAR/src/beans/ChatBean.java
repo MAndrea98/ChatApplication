@@ -97,6 +97,7 @@ public class ChatBean implements ChatRemote, ChatLocal {
 		user.setPassword(u.getPassword());
 		userDAO.getAllUsers().add(user);
 		ctx.setAttribute("userDAO", userDAO);
+        
 		return user;
 	}
 

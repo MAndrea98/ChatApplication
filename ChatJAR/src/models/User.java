@@ -1,5 +1,7 @@
 package models;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
 
 public class User {
@@ -11,9 +13,20 @@ public class User {
 	
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
 		this.id = UUID.randomUUID();
-		this.host = new Host();
+		// TODO Auto-generated constructor stub
+		InetAddress ip;
+        String hostname;
+        try {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+            System.out.println("Your current IP address : " + ip.getHostAddress());
+            System.out.println("Your current Hostname : " + hostname);
+            this.host = new Host(hostname, ip.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
 	}
 
 	public User(String username, String password, Host host) {
