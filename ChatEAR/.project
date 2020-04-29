@@ -5,7 +5,6 @@
 	<projects>
 		<project>ChatWAR</project>
 		<project>ChatJAR</project>
-		<project>ChatJARClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

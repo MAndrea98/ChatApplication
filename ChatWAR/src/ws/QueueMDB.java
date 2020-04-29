@@ -14,7 +14,7 @@ import javax.jms.TextMessage;
 })
 public class QueueMDB implements MessageListener {
 	@EJB WSEndPoint ws;
-	
+		
 	@Override
 	public void onMessage(Message msg) {
 		TextMessage tmsg = (TextMessage)msg;

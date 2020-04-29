@@ -13,6 +13,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+
 @Singleton
 @ServerEndpoint("/ws")
 @LocalBean
