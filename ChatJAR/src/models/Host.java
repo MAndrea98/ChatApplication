@@ -18,6 +18,11 @@ public class Host {
 		this.address = address;
 	}
 
+	public Host(Host host) {
+		this.alias = host.alias;
+		this.address = host.address;
+	}
+
 	public String getAlias() {
 		return alias;
 	}

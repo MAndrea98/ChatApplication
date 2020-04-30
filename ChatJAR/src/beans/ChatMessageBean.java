@@ -71,7 +71,7 @@ public class ChatMessageBean implements ChatMessageRemote, MessageLocal {
 		message.setSender(m.getSender());
 		message.setText(m.getText());
 		message.setReciever(new User("null", "null", new Host()));
-		message.setSubject(message.getSender().getUsername() + " to all");
+		message.setSubject("@" + message.getSender().getUsername() + " to all");
 		message.setDate(Calendar.getInstance());
 		messageDAO.getAllMessages().add(message);
 		ctx.setAttribute("messageDAO", messageDAO);

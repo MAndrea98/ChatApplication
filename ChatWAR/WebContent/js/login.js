@@ -21,6 +21,7 @@ $(document).ready(function(){
 	        $('.register-show').removeClass('show-log-panel');
 	    }
     });
+    start();
 });
 
 function login() {
@@ -60,4 +61,19 @@ function register() {
 		}
 	});
 }
+
+function start() {
+	$.ajax({
+		url: "rest/start",
+		type: "GET",
+		success: function(data) {
+			console.log(data);
+		},
+		error: function() {
+			alert('Error');
+		}
+	});
+}
+
+
 

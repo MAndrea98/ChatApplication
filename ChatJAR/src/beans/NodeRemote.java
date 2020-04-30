@@ -9,7 +9,7 @@ import models.Host;
 @Remote
 public interface NodeRemote {
 
-	public void register(Host host);
+	public String register(Host host);
 	
 	public void newNode(Host host);
 	
