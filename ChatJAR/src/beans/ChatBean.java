@@ -1,5 +1,10 @@
 package beans;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -65,15 +70,19 @@ public class ChatBean implements ChatRemote, ChatLocal {
 					QueueSender sender = session.createSender(queue);
 					// create and publish a message
 					TextMessage mess = session.createTextMessage();
-					mess.setText("Someone loged in");
+					mess.setText(user.getUsername() + " loged in");
 					sender.send(mess);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				
+				
+				ctx.setAttribute("userDAO", userDAO);
 				return user;
 			}
 		}
-		ctx.setAttribute("userDAO", userDAO);
+		
+		
 		return null;
 	}
 	

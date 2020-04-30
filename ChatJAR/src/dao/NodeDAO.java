@@ -50,5 +50,13 @@ public class NodeDAO {
 	public boolean checkNode(Host host) {
 		return allHosts.contains(host);
 	}
+
+	public boolean findByIp(String ip) {
+		for (Host host : allHosts) {
+			if(host.getAddress().equals(ip))
+				return true;
+		}
+		return false;
+	}
 	
 }

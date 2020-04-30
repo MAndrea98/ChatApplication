@@ -1,8 +1,11 @@
 package beans;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -39,6 +42,8 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	@Resource(mappedName = "java:jboss/exported/jms/queue/mojQueue")
 	private Queue queue;
 	
+	private static int incrementerN;
+	
 	@Context
 	ServletContext ctx;
 	
@@ -48,23 +53,56 @@ public class NodeBean implements NodeRemote, NodeLocal {
 			ctx.setAttribute("nodeDAO", new NodeDAO());
 		}
 		
+		Enumeration<NetworkInterface> en;
+        
 		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
 		if (nodeDAO.getAllHosts().size() == 0) {
-			InetAddress ip;
-	        String hostname;
-	        try {
-	            ip = InetAddress.getLocalHost();
-	            hostname = ip.getHostName();
-	            System.out.println("Your current IP address : " + ip.getHostAddress());
-	            System.out.println("Your current Hostname : " + hostname);
-	            Host host = new Host("master", ip.getHostAddress());
+			try {
+				en = NetworkInterface.getNetworkInterfaces();
+				NetworkInterface n = (NetworkInterface) en.nextElement();
+			    Enumeration<InetAddress> ee = n.getInetAddresses();
+			    List<InetAddress> addreses = new ArrayList<InetAddress>();
+			    while (ee.hasMoreElements())
+			    {
+			        InetAddress i = (InetAddress) ee.nextElement();
+			        addreses.add(i);
+			        
+			    }
+			    if(addreses.size() > 0)
+			    	System.out.println("######" + addreses.get(0).getHostAddress());
+	            Host host = new Host("master", addreses.get(0).getHostAddress());
 	            nodeDAO.getAllHosts().add(host);
-	        } catch (UnknownHostException e) {
-	            e.printStackTrace();
-	        }
-			
-			ctx.setAttribute("nodeDAO", nodeDAO);
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
+		try {
+			en = NetworkInterface.getNetworkInterfaces();
+			NetworkInterface n = (NetworkInterface) en.nextElement();
+		    Enumeration<InetAddress> ee = n.getInetAddresses();
+		    List<InetAddress> addreses = new ArrayList<InetAddress>();
+		    
+		    while (ee.hasMoreElements())
+		    {
+		        InetAddress i = (InetAddress) ee.nextElement();
+		        addreses.add(i);
+		    }
+		    
+		    if(addreses.size() > 0)
+		    	System.out.println("######" + addreses.get(0).getHostAddress());
+		    
+            if (!nodeDAO.findByIp(addreses.get(0).getHostAddress())) {
+            	String alias = "Node" + incrementerN++;
+            	Host host = new Host(alias, addreses.get(0).getHostAddress());
+            }
+            
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+            
+		
 		try {
 			QueueConnection connection = (QueueConnection) connectionFactory.createConnection("guest", "guest.guest.1");
 			QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -77,7 +115,7 @@ public class NodeBean implements NodeRemote, NodeLocal {
 			ex.printStackTrace();
 		}
 		
-		
+		ctx.setAttribute("nodeDAO", nodeDAO);
 	}
 
 	@POST
@@ -86,7 +124,6 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	public void register(Host host) {
 		NodeDAO nodeDAO = (NodeDAO) ctx.getAttribute("nodeDAO");
 		nodeDAO.getAllHosts().add(host);
-		ctx.setAttribute("nodeDAO", nodeDAO);
 	}
 
 	@POST
