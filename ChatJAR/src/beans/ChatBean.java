@@ -71,7 +71,6 @@ public class ChatBean implements ChatRemote, ChatLocal {
 					ex.printStackTrace();
 				}
 				
-				
 				ctx.setAttribute("userDAO", userDAO);
 				return user;
 			}
@@ -156,6 +155,7 @@ public class ChatBean implements ChatRemote, ChatLocal {
 	@POST
 	@Path("/post/{text}")
 	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.TEXT_PLAIN)
 	@Override
 	public String test(@PathParam("text") String text) {
 		try {

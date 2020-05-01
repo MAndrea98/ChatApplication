@@ -20,8 +20,6 @@ public class User {
         try {
             ip = InetAddress.getLocalHost();
             hostname = ip.getHostName();
-            System.out.println("Your current IP address : " + ip.getHostAddress());
-            System.out.println("Your current Hostname : " + hostname);
             this.host = new Host(hostname, ip.getHostAddress());
         } catch (UnknownHostException e) {
             e.printStackTrace();

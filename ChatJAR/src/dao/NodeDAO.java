@@ -59,4 +59,21 @@ public class NodeDAO {
 		return false;
 	}
 	
+	public String getMasterIP() {
+		for (Host host : allHosts) {
+			if (host.getAlias().equals("master"))
+				return host.getAddress();
+		}
+		return null;
+	}
+	
+	public ArrayList<Host> getAllNoMaster() {
+		ArrayList<Host> noMaster = new ArrayList<Host>();
+		for (Host host : allHosts) {
+			if (!host.getAlias().equals("master"))
+				noMaster.add(host);
+		}
+		return noMaster;
+	}
+	
 }

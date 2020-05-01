@@ -21,7 +21,7 @@ $(document).ready(function(){
 	        $('.register-show').removeClass('show-log-panel');
 	    }
     });
-    start();
+    //start();
 });
 
 function login() {
