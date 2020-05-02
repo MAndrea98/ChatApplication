@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
@@ -52,8 +53,15 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	
 	private NodeDAO nodeDAO;
 	
+	@Context
+	ServletContext ctx;
+	
 	@PostConstruct
 	public void init() throws UnknownHostException {
+		if(ctx.getAttribute("userDAO") == null) {
+			ctx.setAttribute("userDAO", new UserDAO());
+		}
+		
 		if (nodeDAO == null) {
 			nodeDAO = new NodeDAO();
 		}
@@ -117,7 +125,12 @@ public class NodeBean implements NodeRemote, NodeLocal {
     	http = "http://"+host.getAddress()+":8080/ChatWAR/rest/chat/loggedIn";
     	System.out.println(http);
     	target = client.target(http);
-    	response = target.request().get();
+    	try {
+    		response = target.request().get();
+    	} catch (Exception e) {
+    		deleteNode(host.getAlias());
+    	}
+    	
     	System.out.println(response);
 		return "OK";
 	}
@@ -125,7 +138,7 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	@POST
 	@Path("/node")
 	@Override
-	public void newNode(Host host) {
+	public String newNode(Host host) {
 		try {
 			QueueConnection connection = (QueueConnection) connectionFactory.createConnection("guest", "guest.guest.1");
 			QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -137,6 +150,7 @@ public class NodeBean implements NodeRemote, NodeLocal {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return "New node ("+host.getAlias()+"["+host.getAddress()+"]) has been started";
 	}
 
 	@POST
@@ -150,19 +164,22 @@ public class NodeBean implements NodeRemote, NodeLocal {
 
 	@DELETE
 	@Path("/node/{alias}")
+	@PreDestroy
 	@Override
 	public void deleteNode(@PathParam("alias") String alias) {
-		//nodeDAO.deleteByAlias(alias, userDAO);
+		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+		nodeDAO.deleteByAlias(alias, userDAO);
 	}
 
 	@GET
 	@Path("/node")
 	@Override
 	public void checkNode(Host host) {
-		System.out.println("####");
 		if(!nodeDAO.checkNode(host))
 			deleteNode(host.getAlias());
 	}
+	
+	
 	
 	@GET
 	@Path("/start")

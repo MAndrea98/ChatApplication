@@ -11,7 +11,7 @@ public interface NodeRemote {
 
 	public String register(Host host);
 	
-	public void newNode(Host host);
+	public String newNode(Host host);
 	
 	public ArrayList<Host> allHost(Host host);
 	
