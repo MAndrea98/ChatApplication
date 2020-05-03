@@ -11,6 +11,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.Stateless;
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
@@ -36,6 +37,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import dao.NodeDAO;
 import dao.UserDAO;
 import models.Host;
+
 
 @Startup
 @Singleton
@@ -220,7 +222,7 @@ public class NodeBean implements NodeRemote, NodeLocal {
 	@Override
 	public void deleteNode(@PathParam("alias") String alias) {
 		System.out.println("##############");
-		UserDAO userDAO = (UserDAO) chatBean.getCtx();
+		UserDAO userDAO = (UserDAO) chatBean.getCtx().getAttribute("userDAO");
 		nodeDAO.deleteByAlias(alias, userDAO);
 	}
 	
