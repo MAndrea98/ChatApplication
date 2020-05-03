@@ -41,6 +41,7 @@ public class ChatBean implements ChatRemote, ChatLocal {
 	@Context
 	ServletContext ctx;
 	
+	
 	@PostConstruct
 	public void init() {
 		if(ctx.getAttribute("userDAO") == null) {
@@ -56,6 +57,7 @@ public class ChatBean implements ChatRemote, ChatLocal {
 	@Override
 	public User login(User u) {
 		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+		
 		for (User user : userDAO.getAllUsers()) {
 			if (user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())) {
 				userDAO.getLoggedUsers().add(user);
@@ -180,6 +182,18 @@ public class ChatBean implements ChatRemote, ChatLocal {
 		UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 		return userDAO.findByUsername(username);
 	}
+
+
+	public ServletContext getCtx() {
+		return ctx;
+	}
+
+
+	public void setCtx(ServletContext ctx) {
+		this.ctx = ctx;
+	}
+	
+	
 	
 	
 }

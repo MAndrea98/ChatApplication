@@ -17,5 +17,5 @@ public interface NodeRemote {
 	
 	public void deleteNode(String alias);
 	
-	public void checkNode(Host host);
+	public String checkNode();
 }
